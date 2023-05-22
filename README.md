@@ -46,7 +46,7 @@ Based on these parameters, raven appears to perform the best overall. The assemb
 ```
 prokka --outdir prokka --compliant --centre centre --gcode 11 --evalue 1e-04 --genus Listeria --species Listeria_monocytogenes --quiet raven_Ls137.fa
 ```
-Subsequently, tools such as DefensFinder and ResFinder were intended to be used; however, they did not yield any significant findings. ResFinder identified only the fosX gene associated with fosfomycin resistance, but it was not associated with the disinfectants used in our study. This raised concerns, leading us to step back and perform quality assessment of the sequencing data using [MinIONQC](https://github.com/roblanf/minion_qc).
+Subsequently, tools such as [DefenseFinder](https://defense-finder.mdmparis-lab.com/) and [ResFinder](https://github.com/cadms/resfinder) were intended to be used; however, they did not yield any significant findings. ResFinder identified only the fosX gene associated with fosfomycin resistance, but it was not associated with the disinfectants used in our study. This raised concerns, leading us to step back and perform quality assessment of the sequencing data using [MinIONQC](https://github.com/roblanf/minion_qc).
 
 ```
 Rscript ./MinIONQC.R  -i sequencing_summary.txt -o ~/meat/Lm_137_pass_minionqc_results 
@@ -57,46 +57,42 @@ It was discovered that the sequencing data had very low quality, as indicated by
 ![](Quality2.png)
 
 Considering these issues, an alternative approach was pursued. The [Bonito basecaller](https://github.com/nanoporetech/bonito) was tested and showed slightly improved read quality:
-![](MeanQ.png)
 
 ```
 bonito basecaller dna_r9.4.1_e8_fast@v3.4 pass > 137p_bonito_basecalled.fastq
 ```
+![](MeanQ.png)
+
+We reassembled the genome using raven, annotated it with prokka, then used [barrnap](https://github.com/tseemann/barrnap) and BLAST to find the [reference genome](https://www.ncbi.nlm.nih.gov/genome/159?genome_assembly_id=159660) by 16S rRNA genes.
 ```
 raven 137p_bonito_basecalled.fastq > raven_bonito_p137.fa -t4
-```
-
-```
 barrnap prokka/PROKKA_05132023.fna > output.gff3
 bedtools getfasta -fi prokka/PROKKA_05132023.fna -bed output.gff3 -name -s -fo 16S.fasta
 ```
-Defence finder and ResFinder == 0
-
-Download [reference genome](https://www.ncbi.nlm.nih.gov/genome/159?genome_assembly_id=159660). 
-
+ 
+[minimap2](https://github.com/lh3/minimap2) was used for mapping. SAMtools was used for conversion to the BAM format:
 ```
 minimap2 -ax map-ont /home/fox/ngmlr-0.2.7/lm_reference.fasta /home/fox/work1/Lm_137/137p_bonito_basecalled.fastq > output.sam
-```
-
-```
 samtools view -bS output.sam > 137p_bonito.bam
 samtools sort 137p_bonito.bam -o 137p_bonito.sorted.bam
+```
+Some statistics:
+```
 samtools flagstat 137p_bonito.sorted.bam > bon137_flag.txt
-```
 
-```
 462955 + 0 in total (QC-passed reads + QC-failed reads)
 15425 + 0 secondary
 15664 + 0 supplementary
 0 + 0 duplicates
 419298 + 0 mapped (90.57% : N/A)
 ```
+To get a vcf file for later viewing in IGV, we have used several tools:
 
+- [bcftools](https://samtools.github.io/bcftools/bcftools.html)
 ```
 bcftools mpileup -Ou -f /home/fox/ngmlr-0.2.7/lm_reference.fasta 137p_bonito.sorted.bam | bcftools call -mv -Ov -o 137bon_output.vcf
 ```
-
-DeepVariant
+- [DeepVariant](https://github.com/google/deepvariant)
 ```
 INPUT_DIR="${PWD}"
 OUTPUT_DIR="${PWD}/137p-output"
@@ -115,27 +111,22 @@ google/deepvariant:"${BIN_VERSION}" \
 —intermediate_results_dir /output/intermediate_results_dir \
 —num_shards=4
 ```
+![](DV.png)
 
-VarScan 
-
+- [VarScan](http://dkoboldt.github.io/varscan/)
 ```
 varscan mpileup2snp 137p_bonito.mpileup —min-var-freq 0.5 —variants —output-vcf 1 > VarScan_bon137.vcf
 ```
-
+- and [pilon](https://github.com/broadinstitute/pilon)
 ```
 java -jar pilon-1.24.jar —genome lm_reference.fasta —vcf —vcfqe —tracks —nanopore 137p_bonito.sorted.bam
 ```
 
-
 ### Results
+Unfortunately, on closer inspection of the output files in IGV (Integrative Genomics Viewer), we did not find any genes that were associated with the development of disinfectant resistance or enhanced biofilm production. 
 
 ### Conclusion and further plans
 In conclusion, we learned an important lesson about the necessity of conducting quality control measures at the beginning of any sequencing project. Despite the challenges faced during this study, our research has helped us to better master the tools for ONT data processing: for example, we found a slight advantage of the bonito basecoller when it comes to the quality of reads.  We also compared several genome assemblers and in our case the raven performed better.
 Further improvements in reed quality with nanopolish are in the pipeline. If we find significant genes associated with disinfection resistance, we also plan to search for their proteins in the MS data using the MaxQuant tool. 
-
-
-
-
-
 
 ### Literature
