@@ -128,7 +128,7 @@ Unfortunately, on closer inspection of the output files in IGV (Integrative Geno
 
 ### Conclusion and further plans
 In conclusion, we learned an important lesson about the necessity of conducting quality control measures at the beginning of any sequencing project. Despite the challenges faced during this study, our research has helped us to better master the tools for ONT data processing: for example, we found a slight advantage of the bonito basecoller when it comes to the quality of reads.  We also compared several genome assemblers and in our case the raven performed better.
-Further improvements in read quality with Nanopolish are in the pipeline. If we find significant genes associated with disinfection resistance, we also plan to search for their proteins in the MS-data using the MaxQuant tool. 
+Further improvements in read quality with Nanopolish tool are in the pipeline. If we find significant genes associated with disinfection resistance, we also plan to search for their proteins in the MS-data using the MaxQuant tool. 
 
 ### Literature
 
