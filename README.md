@@ -4,7 +4,7 @@ Authors:
 - Kozlova Anna
 
 ### Introduction
-*Listeria monocytogenes* is a pathogenic bacterium commonly found in food processing environments, particularly in meat production facilities. Its ability to form biofilms on various surfaces poses a significant risk for food contamination and subsequent foodborne illnesses. To better understand the factors contributing to biofilm growth and the development of resistance, the application of advanced sequencing technologies such as Oxford Nanopore Technologies (ONT) sequencing has emerged as a valuable tool. 
+*Listeria monocytogenes* is a pathogenic bacterium commonly found in food processing environments, particularly in meat production facilities. Its ability to form biofilms on various surfaces poses a significant risk for food contamination and subsequent foodborne illnesses (Matle et al, 2020). To better understand the factors contributing to biofilm growth and the development of resistance, the application of advanced sequencing technologies such as Oxford Nanopore Technologies (ONT) sequencing has emerged as a valuable tool. 
 
 ### Aim, tasks and data
 In this study, we aimed to investigate the growth of biofilms containing *Listeria monocytogenes*. We obtained ONT sequencing data from meat and poultry processing plants (barcode Lm_137), as well as panoramic MS (Mass Spectrometry) analysis data. The data were provided by [Institute of Biomedical Chemistry](https://www.ibmc.msk.ru/). These biofilms were previously treated with disinfectants based on Quaternary Ammonium Compounds, acetic acid, and chlorine. Our goal was to determine why the biofilms developed in unexpected areas and identify the determinants of their resistance.
@@ -131,3 +131,6 @@ In conclusion, we learned an important lesson about the necessity of conducting 
 Further improvements in reed quality with nanopolish are in the pipeline. If we find significant genes associated with disinfection resistance, we also plan to search for their proteins in the MS data using the MaxQuant tool. 
 
 ### Literature
+
+Matle I, Mbatha KR, Madoroba E. A review of Listeria monocytogenes from meat and meat products: Epidemiology, virulence factors, antimicrobial resistance and diagnosis. Onderstepoort J Vet Res. 2020 Oct 9;87(1):e1-e20. doi: 10.4102/ojvr.v87i1.1869. PMID: 33054262; PMCID: PMC7565150.
+
