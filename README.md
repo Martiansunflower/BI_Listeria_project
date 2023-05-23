@@ -11,6 +11,7 @@ In this study, we aimed to investigate the growth of biofilms containing *Lister
 
 ### Workflow
 The workflow of the project presented at the following scheme. Each part of scheme will be discussed below.
+![](workflow.png)
 
 Initially, the ONT sequencing files were converted from FAST5 to FASTQ format using [guppy basecaller](https://timkahlke.github.io/LongRead_tutorials/BS_G.html) software. 
 ```
